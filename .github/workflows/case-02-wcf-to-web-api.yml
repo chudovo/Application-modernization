@@ -20,7 +20,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Scenario tests
-        run: dotnet test Shipping.sln --nologo --logger "console;verbosity=normal"
+        timeout-minutes: 10
+        run: dotnet test Shipping.sln --nologo --logger "console;verbosity=normal" --blame-hang-timeout 2m
 
   after:
     name: Migrated service (.NET 10, REST and SOAP)

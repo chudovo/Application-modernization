@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shipping.Contracts;
@@ -41,7 +42,10 @@ namespace Shipping.ScenarioTests
             using (var host = new ServiceHost(typeof(ShipmentService), new Uri(address)))
             {
                 host.AddServiceEndpoint(typeof(IShipmentService), new BasicHttpBinding(), "");
-                host.Open();
+                // A ServiceHost opened on a thread with a SynchronizationContext dispatches every call back to that
+                // context. The test runner has one, and the test thread is blocked in the client call: a deadlock.
+                // Opening the host on a thread-pool thread avoids it, as a real host process would.
+                Task.Run(() => host.Open()).GetAwaiter().GetResult();
 
                 var factory = new ChannelFactory<IShipmentService>(new BasicHttpBinding(), new EndpointAddress(address));
                 var channel = factory.CreateChannel();
