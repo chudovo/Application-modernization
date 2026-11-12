@@ -113,6 +113,13 @@ These do not change any response, which is the point: they were made while the c
   compatible, but that is not tested here.
 - WCF, Web Forms and Windows services. Each needs a different approach and gets its own case.
 
+## Write-up
+
+A step-by-step description of this case, with the reasoning behind each decision:
+
+- English: [.NET Framework 4.8 Web API to .NET 10: A Worked Migration](https://legacymodernizationhub.com/cases/net-framework-web-api-to-net-10/)
+- Deutsch: [Von .NET Framework 4.8 zu .NET 10: Migration einer Web-API am Beispiel](https://legacy-modernisierung.de/fallbeispiele/net-framework-web-api-zu-net-10/)
+
 ## Background
 
 This case belongs to the guide
