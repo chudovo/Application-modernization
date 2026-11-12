@@ -1,0 +1,41 @@
+name: case-01 .NET Framework to .NET 10
+
+on:
+  push:
+    paths: ["cases/01-net-framework-to-net10/**", ".github/workflows/case-01-net-framework-to-net10.yml"]
+  pull_request:
+    paths: ["cases/01-net-framework-to-net10/**"]
+  workflow_dispatch:
+
+jobs:
+  before:
+    name: Legacy app (.NET Framework 4.8, EF6, LocalDB)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: cases/01-net-framework-to-net10/before
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Start LocalDB
+        run: sqllocaldb start MSSQLLocalDB
+      - name: Contract tests
+        run: dotnet test OrderDesk.sln --nologo --logger "console;verbosity=normal"
+
+  after:
+    name: Migrated app (.NET 10, EF Core)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cases/01-net-framework-to-net10/after
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Contract tests
+        run: dotnet test OrderDesk.sln --nologo
+      - name: Container image builds
+        run: docker build -t orderdesk-api .

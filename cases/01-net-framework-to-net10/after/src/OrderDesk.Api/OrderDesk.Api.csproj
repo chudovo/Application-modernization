@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />
+    <ProjectReference Include="..\OrderDesk.Domain\OrderDesk.Domain.csproj" />
+    <ProjectReference Include="..\OrderDesk.Data\OrderDesk.Data.csproj" />
+  </ItemGroup>
+</Project>
