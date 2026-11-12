@@ -82,8 +82,8 @@ namespace OrderDesk.ContractTests
             var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             while (dir != null && !File.Exists(Path.Combine(dir.FullName, "contract", "cases.json"))) dir = dir.Parent;
             if (dir == null) throw new FileNotFoundException("contract/cases.json not found above " + AppDomain.CurrentDomain.BaseDirectory);
-            // Keep numbers as decimals so 49.90 and 49.9 compare as equal values, not as text.
-            using (var reader = new JsonTextReader(new StreamReader(Path.Combine(dir.FullName, "contract", "cases.json"))) { FloatParseHandling = FloatParseHandling.Decimal })
+            // Keep numbers as decimals so 49.90 and 49.9 compare as equal values, and keep dates as the text the client sees.
+            using (var reader = new JsonTextReader(new StreamReader(Path.Combine(dir.FullName, "contract", "cases.json"))) { FloatParseHandling = FloatParseHandling.Decimal, DateParseHandling = DateParseHandling.None })
                 return JArray.Load(reader);
         }
     }
