@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Nullable>disable</Nullable>
+    <RootNamespace>Shipping.Contracts</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The contract is the same source file the legacy service uses. Nothing in it changes. -->
+    <Compile Include="..\..\..\before\src\Shipping.Contracts\IShipmentService.cs" Link="IShipmentService.cs" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="10.1.0" />
+  </ItemGroup>
+</Project>

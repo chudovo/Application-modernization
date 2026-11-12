@@ -1,0 +1,75 @@
+[
+  { "name": "get a shipment by tracking number",
+    "op": "GetShipment", "args": { "trackingNumber": "SHP-000001" },
+    "expect": { "result": {
+      "trackingNumber": "SHP-000001", "recipientName": "Anna Schmidt", "city": "Berlin", "postalCode": "10115", "countryCode": "DE",
+      "weightKg": 0.8, "service": "Standard", "status": "Created", "price": 4.90, "createdBy": "seed",
+      "createdUtc": "2026-02-01T08:00:00Z", "deliveredUtc": null } } },
+
+  { "name": "a delivered shipment carries its delivery time",
+    "op": "GetShipment", "args": { "trackingNumber": "SHP-000003" },
+    "expect": { "result": { "status": "Delivered", "price": 33.10, "deliveredUtc": "2026-02-07T15:45:00Z" } } },
+
+  { "name": "unknown tracking number is a not-found error",
+    "op": "GetShipment", "args": { "trackingNumber": "SHP-999999" },
+    "expect": { "error": { "kind": "NotFound" } } },
+
+  { "name": "find shipments by status",
+    "op": "FindShipments", "args": { "status": "InTransit" },
+    "expect": { "trackingNumbers": ["SHP-000002"] } },
+
+  { "name": "find shipments by country",
+    "op": "FindShipments", "args": { "countryCode": "US" },
+    "expect": { "trackingNumbers": ["SHP-000003"] } },
+
+  { "name": "find without filters returns everything in tracking number order",
+    "op": "FindShipments", "args": { },
+    "expect": { "trackingNumbers": ["SHP-000001", "SHP-000002", "SHP-000003"] } },
+
+  { "name": "quote a domestic standard parcel under one kilogram",
+    "op": "QuoteRate", "args": { "weightKg": 0.5, "countryCode": "DE", "service": "Standard" },
+    "expect": { "value": 4.90 } },
+
+  { "name": "quote an EU express parcel: surcharge per started kilogram, then the express factor",
+    "op": "QuoteRate", "args": { "weightKg": 3.2, "countryCode": "FR", "service": "Express" },
+    "expect": { "value": 20.25 } },
+
+  { "name": "quote with an invalid weight is a validation error",
+    "op": "QuoteRate", "args": { "weightKg": 0, "countryCode": "DE", "service": "Standard" },
+    "expect": { "error": { "kind": "Validation", "errors": ["WeightKg must be greater than 0 and at most 30."] } } },
+
+  { "name": "create a shipment: next tracking number, price, caller identity and creation time",
+    "op": "CreateShipment", "clientId": "warehouse-7",
+    "args": { "recipientName": "Maria Rossi", "city": "Milano", "postalCode": "20121", "countryCode": "IT", "weightKg": 2.0, "service": "Standard" },
+    "expect": { "result": {
+      "trackingNumber": "SHP-000004", "recipientName": "Maria Rossi", "city": "Milano", "postalCode": "20121", "countryCode": "IT",
+      "weightKg": 2.0, "service": "Standard", "status": "Created", "price": 11.10, "createdBy": "warehouse-7",
+      "createdUtc": "2026-02-10T12:00:00Z", "deliveredUtc": null } } },
+
+  { "name": "create without a caller identity records the caller as unknown",
+    "op": "CreateShipment",
+    "args": { "recipientName": "Maria Rossi", "city": "Milano", "postalCode": "20121", "countryCode": "IT", "weightKg": 2.0, "service": "Standard" },
+    "expect": { "result": { "createdBy": "unknown" } } },
+
+  { "name": "create with several invalid fields reports all of them, in a fixed order",
+    "op": "CreateShipment",
+    "args": { "recipientName": "", "city": "Milano", "postalCode": "20121", "countryCode": "ITA", "weightKg": 45, "service": "Standard" },
+    "expect": { "error": { "kind": "Validation", "errors": [
+      "RecipientName is required.", "CountryCode must be a two-letter ISO code.", "WeightKg must be greater than 0 and at most 30." ] } } },
+
+  { "name": "move a created shipment into transit",
+    "op": "UpdateStatus", "args": { "trackingNumber": "SHP-000001", "newStatus": "InTransit" },
+    "expect": { "result": { "trackingNumber": "SHP-000001", "status": "InTransit", "deliveredUtc": null } } },
+
+  { "name": "delivering a shipment stamps the delivery time",
+    "op": "UpdateStatus", "args": { "trackingNumber": "SHP-000002", "newStatus": "Delivered" },
+    "expect": { "result": { "status": "Delivered", "deliveredUtc": "2026-02-10T12:00:00Z" } } },
+
+  { "name": "a delivered shipment cannot go back into transit",
+    "op": "UpdateStatus", "args": { "trackingNumber": "SHP-000003", "newStatus": "InTransit" },
+    "expect": { "error": { "kind": "InvalidTransition" } } },
+
+  { "name": "updating an unknown shipment is a not-found error",
+    "op": "UpdateStatus", "args": { "trackingNumber": "SHP-999999", "newStatus": "InTransit" },
+    "expect": { "error": { "kind": "NotFound" } } }
+]

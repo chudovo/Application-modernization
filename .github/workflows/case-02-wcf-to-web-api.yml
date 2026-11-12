@@ -1,0 +1,39 @@
+name: case-02 WCF to Web API
+
+on:
+  push:
+    paths: ["cases/02-wcf-to-web-api/**", ".github/workflows/case-02-wcf-to-web-api.yml"]
+  pull_request:
+    paths: ["cases/02-wcf-to-web-api/**"]
+  workflow_dispatch:
+
+jobs:
+  before:
+    name: Legacy service (WCF on .NET Framework 4.8)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: cases/02-wcf-to-web-api/before
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Scenario tests
+        run: dotnet test Shipping.sln --nologo --logger "console;verbosity=normal"
+
+  after:
+    name: Migrated service (.NET 10, REST and SOAP)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cases/02-wcf-to-web-api/after
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Scenario tests
+        run: dotnet test Shipping.sln --nologo
+      - name: Container image builds
+        run: docker build -f Dockerfile -t shipping-api ..
