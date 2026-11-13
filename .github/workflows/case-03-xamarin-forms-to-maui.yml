@@ -1,0 +1,62 @@
+name: case-03 Xamarin.Forms to .NET MAUI
+
+on:
+  push:
+    paths: ["cases/03-xamarin-forms-to-maui/**", ".github/workflows/case-03-xamarin-forms-to-maui.yml"]
+  pull_request:
+    paths: ["cases/03-xamarin-forms-to-maui/**"]
+  workflow_dispatch:
+
+jobs:
+  scenarios-before:
+    name: Scenarios against the Xamarin.Forms app (shared project, mocked platform)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test cases/03-xamarin-forms-to-maui/before/tests/ParcelTracker.ScenarioTests --nologo --blame-hang-timeout 2m
+
+  scenarios-after:
+    name: Scenarios against the .NET MAUI app (core library)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test cases/03-xamarin-forms-to-maui/after/tests/ParcelTracker.ScenarioTests --nologo --blame-hang-timeout 2m
+
+  app-android:
+    name: .NET MAUI app builds for Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet workload install maui-android
+      - run: dotnet build cases/03-xamarin-forms-to-maui/after/src/ParcelTracker.App -f net10.0-android -c Release
+
+  app-windows:
+    name: .NET MAUI app builds for Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet workload install maui
+      - run: dotnet build cases/03-xamarin-forms-to-maui/after/src/ParcelTracker.App -f net10.0-windows10.0.19041.0 -c Release
+
+  app-ios:
+    name: .NET MAUI app builds for iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet workload install maui
+      - run: dotnet build cases/03-xamarin-forms-to-maui/after/src/ParcelTracker.App -f net10.0-ios -c Debug

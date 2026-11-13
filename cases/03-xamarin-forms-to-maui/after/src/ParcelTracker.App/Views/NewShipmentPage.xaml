@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ParcelTracker.ViewModels;assembly=ParcelTracker.Core"
+             xmlns:controls="clr-namespace:ParcelTracker.App.Controls"
+             x:Class="ParcelTracker.App.Views.NewShipmentPage"
+             x:DataType="vm:NewShipmentViewModel"
+             Title="New shipment">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="8">
+            <controls:BorderlessEntry Placeholder="Recipient name" Text="{Binding RecipientName}" />
+            <controls:BorderlessEntry Placeholder="City" Text="{Binding City}" />
+            <controls:BorderlessEntry Placeholder="Postal code" Text="{Binding PostalCode}" />
+            <controls:BorderlessEntry Placeholder="Country code (two letters)" Text="{Binding CountryCode}" MaxLength="2" />
+            <controls:BorderlessEntry Placeholder="Weight in kg" Text="{Binding WeightText}" Keyboard="Numeric" />
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="Express" VerticalOptions="Center" />
+                <Switch IsToggled="{Binding IsExpress}" />
+            </HorizontalStackLayout>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Errors}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" TextColor="#C62828" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+            <Label Text="{Binding QuoteText}" FontAttributes="Bold" />
+            <Button Text="Get quote" Command="{Binding QuoteCommand}" />
+            <Button Text="Create shipment" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

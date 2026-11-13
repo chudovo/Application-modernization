@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The scenarios and the backend starter are shared with the .NET MAUI test project. -->
+    <Compile Include="..\..\..\scenarios\*.cs" LinkBase="Shared" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <!-- Stands in for the Android and iOS platform layer, so pages and view models run without a device. -->
+    <PackageReference Include="Xamarin.Forms.Mocks" Version="4.7.0.1" />
+    <ProjectReference Include="..\..\ParcelTracker\ParcelTracker.csproj" />
+    <!-- The shipment service from case 02 is the backend the app is tested against. -->
+    <ProjectReference Include="..\..\..\..\02-wcf-to-web-api\after\src\Shipping.Api\Shipping.Api.csproj" />
+  </ItemGroup>
+</Project>

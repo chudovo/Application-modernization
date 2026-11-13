@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ParcelTracker.ViewModels;assembly=ParcelTracker.Core"
+             xmlns:models="clr-namespace:ParcelTracker.Models;assembly=ParcelTracker.Core"
+             x:Class="ParcelTracker.App.Views.ShipmentListPage"
+             x:DataType="vm:ShipmentListViewModel"
+             x:Name="Page"
+             Title="Shipments">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="New" Command="{Binding NewCommand}" />
+    </ContentPage.ToolbarItems>
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <Picker Grid.Row="0" Title="Status" ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding StatusFilter}" Margin="16,8" />
+        <Label Grid.Row="1" Text="Offline: showing saved shipments" IsVisible="{Binding IsOffline}" BackgroundColor="#FFF3CD" Padding="16,8" />
+        <Label Grid.Row="2" Text="{Binding ErrorMessage}" TextColor="#C62828" Margin="16,8" />
+        <RefreshView Grid.Row="3" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Shipment">
+                        <VerticalStackLayout Padding="16,12">
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.OpenCommand, Source={x:Reference Page}, x:DataType=ContentPage}" CommandParameter="{Binding .}" />
+                            </VerticalStackLayout.GestureRecognizers>
+                            <Label Text="{Binding Title}" FontAttributes="Bold" />
+                            <Label Text="{Binding Subtitle}" TextColor="{Binding Status, Converter={StaticResource StatusToColor}}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

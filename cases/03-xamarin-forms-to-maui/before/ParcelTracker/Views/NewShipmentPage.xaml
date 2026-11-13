@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ParcelTracker.Controls"
+             x:Class="ParcelTracker.Views.NewShipmentPage"
+             Title="New shipment">
+    <ScrollView>
+        <StackLayout Padding="16" Spacing="8">
+            <controls:BorderlessEntry Placeholder="Recipient name" Text="{Binding RecipientName}" />
+            <controls:BorderlessEntry Placeholder="City" Text="{Binding City}" />
+            <controls:BorderlessEntry Placeholder="Postal code" Text="{Binding PostalCode}" />
+            <controls:BorderlessEntry Placeholder="Country code (two letters)" Text="{Binding CountryCode}" MaxLength="2" />
+            <controls:BorderlessEntry Placeholder="Weight in kg" Text="{Binding WeightText}" Keyboard="Numeric" />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Express" VerticalOptions="Center" />
+                <Switch IsToggled="{Binding IsExpress}" />
+            </StackLayout>
+            <StackLayout BindableLayout.ItemsSource="{Binding Errors}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding .}" TextColor="#C62828" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            <Label Text="{Binding QuoteText}" FontAttributes="Bold" />
+            <Button Text="Get quote" Command="{Binding QuoteCommand}" />
+            <Button Text="Create shipment" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

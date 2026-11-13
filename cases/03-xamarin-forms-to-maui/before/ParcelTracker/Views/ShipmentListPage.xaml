@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParcelTracker.Views.ShipmentListPage"
+             x:Name="Page"
+             Title="Shipments">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="New" Command="{Binding NewCommand}" />
+    </ContentPage.ToolbarItems>
+    <StackLayout Spacing="0">
+        <Picker Title="Status" ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding StatusFilter}" Margin="16,8" />
+        <Label Text="Offline: showing saved shipments" IsVisible="{Binding IsOffline}" BackgroundColor="#FFF3CD" Padding="16,8" />
+        <Label Text="{Binding ErrorMessage}" TextColor="#C62828" Margin="16,8" />
+        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="16,12">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.OpenCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" />
+                            </StackLayout.GestureRecognizers>
+                            <Label Text="{Binding Title}" FontAttributes="Bold" />
+                            <Label Text="{Binding Subtitle}" TextColor="{Binding Status, Converter={StaticResource StatusToColor}}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </StackLayout>
+</ContentPage>
