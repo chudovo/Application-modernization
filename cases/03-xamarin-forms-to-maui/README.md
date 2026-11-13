@@ -55,10 +55,13 @@ dotnet build after/src/ParcelTracker.App -f net10.0-android
 | 11 scenarios against the .NET MAUI view models | CI, Linux | 11 / 11 |
 | .NET MAUI app builds for Android | CI, Linux | builds, produces a signed APK |
 | .NET MAUI app builds for Windows | CI, Windows | builds |
-| .NET MAUI app builds for iOS | CI, macOS | IOS_RESULT |
+| .NET MAUI app builds for iOS | CI, macOS | not built, see below |
 
 Not verified:
 
+- **The iOS build.** The .NET for iOS SDK in the current .NET 10 workload requires Xcode 27.2. The hosted macOS build
+  agents offered Xcode 26.x, so the build stopped before it reached the project. The iOS-specific code is two lines:
+  the handler mapping and the settings store.
 - **The Xamarin platform projects.** The Xamarin toolchain is not available on current build agents. The Android and
   iOS sources in `before/` are reference code and were not compiled. The shared project, which holds all pages and
   view models, is compiled and tested.
@@ -127,7 +130,8 @@ with "partial property must have an implementation part". Version 8.4.2 works.
 
 ## Write-up
 
-WRITEUP_LINKS
+- English: [Xamarin.Forms to .NET MAUI: A Worked Migration with Shared Tests](https://legacymodernizationhub.com/cases/xamarin-forms-to-net-maui/)
+- Deutsch: [Von Xamarin.Forms zu .NET MAUI: Migration am Beispiel mit gemeinsamen Tests](https://legacy-modernisierung.de/fallbeispiele/xamarin-forms-zu-net-maui/)
 
 ## Background
 

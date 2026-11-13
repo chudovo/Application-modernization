@@ -10,6 +10,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 |---|---|---|---|---|
 | 01 | [.NET Framework Web API to .NET 10](cases/01-net-framework-to-net10/) | .NET Framework 4.8, Web API 2, EF6 | .NET 10, ASP.NET Core, EF Core | [EN](https://legacymodernizationhub.com/cases/net-framework-web-api-to-net-10/), [DE](https://legacy-modernisierung.de/fallbeispiele/net-framework-web-api-zu-net-10/) |
 | 02 | [WCF service to ASP.NET Core Web API](cases/02-wcf-to-web-api/) | .NET Framework 4.8, WCF, SOAP | .NET 10, REST API, SOAP kept through CoreWCF | [EN](https://legacymodernizationhub.com/cases/wcf-to-aspnet-core-web-api/), [DE](https://legacy-modernisierung.de/fallbeispiele/wcf-zu-aspnet-core-web-api/) |
+| 03 | [Xamarin.Forms to .NET MAUI](cases/03-xamarin-forms-to-maui/) | Xamarin.Forms 5 | .NET MAUI on .NET 10 | [EN](https://legacymodernizationhub.com/cases/xamarin-forms-to-net-maui/), [DE](https://legacy-modernisierung.de/fallbeispiele/xamarin-forms-zu-net-maui/) |
 
 ## License
 
