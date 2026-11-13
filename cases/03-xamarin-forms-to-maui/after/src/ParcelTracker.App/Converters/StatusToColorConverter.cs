@@ -4,7 +4,7 @@ namespace ParcelTracker.App.Converters;
 
 public class StatusToColorConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value as string switch
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => (value as string) switch
     {
         "Delivered" => Color.FromArgb("#2E7D32"),
         "InTransit" => Color.FromArgb("#1F6FD6"),

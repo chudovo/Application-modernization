@@ -7,7 +7,7 @@
              Title="{Binding Title}">
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="8">
-            <Label Text="{Binding Shipment.RecipientName}" FontSize="Large" FontAttributes="Bold" />
+            <Label Text="{Binding Shipment.RecipientName}" FontSize="22" FontAttributes="Bold" />
             <Label Text="{Binding Shipment.City}" />
             <Label Text="{Binding Shipment.CountryCode}" />
             <Label Text="{Binding StatusLabel}" TextColor="{Binding Shipment.Status, Converter={StaticResource StatusToColor}}" FontAttributes="Bold" />
