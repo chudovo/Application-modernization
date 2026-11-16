@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The shipment service from case 02 is the backend the app is tested against. -->
+    <ProjectReference Include="..\..\..\02-wcf-to-web-api\after\src\Shipping.Api\Shipping.Api.csproj" />
+  </ItemGroup>
+</Project>
