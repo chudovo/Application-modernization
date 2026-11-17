@@ -1,0 +1,58 @@
+name: case-05 Entity Framework 6 to EF Core
+
+on:
+  push:
+    paths: ["cases/05-ef6-to-ef-core/**", ".github/workflows/case-05-ef6-to-ef-core.yml"]
+  pull_request:
+    paths: ["cases/05-ef6-to-ef-core/**"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: cases/05-ef6-to-ef-core
+
+env:
+  # A throwaway SQL Server that lives for one job. Not a secret.
+  ORDERDESK_SQL: Server=localhost,1433;User Id=sa;Password=Ci_only_Passw0rd;TrustServerCertificate=True
+
+jobs:
+  scenarios-before:
+    name: Scenarios against Entity Framework 6 and SQL Server
+    runs-on: ubuntu-latest
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: Ci_only_Passw0rd }
+        ports: ["1433:1433"]
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Ci_only_Passw0rd -Q 'SELECT 1'"
+          --health-interval 5s --health-timeout 5s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test before/tests/OrderDesk.Scenarios --nologo
+      - name: The committed schema script is what Entity Framework 6 generates for the model
+        run: |
+          dotnet run --project before/tools/ScriptDatabase -- /tmp/generated.sql
+          # Everything up to the migration history row, which carries a timestamp.
+          diff <(sed '/^INSERT \[dbo\]\.\[__MigrationHistory\]/,$d' database/legacy-schema.sql) <(sed '/^INSERT \[dbo\]\.\[__MigrationHistory\]/,$d' /tmp/generated.sql)
+
+  scenarios-after:
+    name: Scenarios and schema checks against EF Core and SQL Server
+    runs-on: ubuntu-latest
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: Ci_only_Passw0rd }
+        ports: ["1433:1433"]
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Ci_only_Passw0rd -Q 'SELECT 1'"
+          --health-interval 5s --health-timeout 5s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test after/tests/OrderDesk.Scenarios --nologo
