@@ -39,10 +39,10 @@ dotnet test after/tests/Shop.Contract
 
 | Check | Where | Result |
 |---|---|---|
-| Contract against the monolith | CI, Linux | @@BEFORE@@ |
-| Contract through the gateway, everything routed to the monolith | CI, Linux | @@STEP1@@ |
-| Contract through the gateway, catalog served by the new service | CI, Linux | @@STEP2@@ |
-| Extraction tests: routing, data copy, catalog outage, routing back and forward | CI, Linux | @@EXTRA@@ |
+| Contract against the monolith | CI, Linux | 19 / 19 |
+| Contract through the gateway, everything routed to the monolith | CI, Linux | 19 / 19 |
+| Contract through the gateway, catalog served by the new service | CI, Linux | 19 / 19 |
+| Extraction tests: routing, data copy, catalog outage, routing back and forward | CI, Linux | 5 / 5 |
 
 Not verified:
 

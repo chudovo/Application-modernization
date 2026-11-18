@@ -13,6 +13,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 | 03 | [Xamarin.Forms to .NET MAUI](cases/03-xamarin-forms-to-maui/) | Xamarin.Forms 5 | .NET MAUI on .NET 10 | [EN](https://legacymodernizationhub.com/cases/xamarin-forms-to-net-maui/), [DE](https://legacy-modernisierung.de/fallbeispiele/xamarin-forms-zu-net-maui/) |
 | 04 | [.NET MAUI to React Native](cases/04-maui-to-react-native/) | .NET MAUI on .NET 10 | React Native 0.88, Expo SDK 58 | [EN](https://legacymodernizationhub.com/cases/net-maui-to-react-native/), [DE](https://legacy-modernisierung.de/fallbeispiele/net-maui-zu-react-native/) |
 | 05 | [Entity Framework 6 to EF Core](cases/05-ef6-to-ef-core/) | Entity Framework 6.5, SQL Server | EF Core 10, same database | [EN](https://legacymodernizationhub.com/cases/entity-framework-6-to-ef-core/), [DE](https://legacy-modernisierung.de/fallbeispiele/entity-framework-6-zu-ef-core/) |
+| 06 | [Strangler Fig: one service out of a monolith](cases/06-strangler-fig/) | ASP.NET Core monolith, one database | gateway (YARP), monolith, catalog service | [EN](https://legacymodernizationhub.com/cases/strangler-fig-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/strangler-fig-muster-beispiel/) |
 
 ## License
 
