@@ -78,6 +78,11 @@ public class ExtractionTests : IAsyncLifetime
         // But the monolith's table stopped at the cutover: the new product and the new price are not there.
         Assert.Equal(HttpStatusCode.NotFound, (await _shop.Client.GetAsync("/api/products/RUG-11")).StatusCode);
         Assert.Contains("\"price\":89.50", await (await _shop.Client.GetAsync("/api/products/CHAIR-01")).Content.ReadAsStringAsync());
+
+        // And the monolith's order code still asks the service (Catalog:Mode is a second switch), so the two disagree:
+        // the catalog shows 89.50, a new order is priced at 95.00.
+        var order = await _shop.Client.PostAsync("/api/orders", Json(OrderOneChair));
+        Assert.Contains("\"unitPrice\":95.00", await order.Content.ReadAsStringAsync());
     }
 
     [Fact]
