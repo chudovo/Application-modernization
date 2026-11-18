@@ -1,0 +1,33 @@
+name: case-06 Strangler Fig
+
+on:
+  push:
+    paths: ["cases/06-strangler-fig/**", ".github/workflows/case-06-strangler-fig.yml"]
+  pull_request:
+    paths: ["cases/06-strangler-fig/**"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: cases/06-strangler-fig
+
+jobs:
+  contract-before:
+    name: Contract against the monolith
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test before/tests/Shop.Contract --nologo
+
+  contract-after:
+    name: Contract through the gateway, before and after the extraction
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test after/tests/Shop.Contract --nologo
