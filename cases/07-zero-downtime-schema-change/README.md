@@ -57,8 +57,8 @@ To use another server, set `PAYMENTS_PG` to its connection string. The tests cre
 | Check | Where | Result |
 |---|---|---|
 | 9 behaviour checks for each of the 20 combinations of release and schema state | CI, PostgreSQL 17 | matrix below, as expected |
-| The whole sequence under load from 8 clients, with rolling deployments | CI | @@ROLLOUT@@ |
-| Lock queue, lock timeout, backfill restart, overlap of releases, changed sums | CI | @@PITFALLS@@ |
+| The whole sequence under load from 8 clients, with rolling deployments | CI | 0 failed operations, books agree |
+| Lock queue, lock timeout, backfill restart, overlap of releases, changed sums | CI | 6 / 6 |
 
 Not verified:
 
@@ -83,8 +83,8 @@ Number of the 9 behaviour checks that pass, measured by
 | Release 3 | 0 | 5 | **9** | **9** | 5 |
 | Release 4 | 0 | 2 | 6 | **9** | **9** |
 
-Read along a row: a release works in a band of schema states. Read down a column: in every state at least two
-releases work, which is what makes a rolling deployment possible. The rules of the sequence follow from the cells
+Read along a row: a release works in a band of schema states. Read down a column: in every state between the first
+and the last at least two releases work, which is what makes a rolling deployment possible. The rules of the sequence follow from the cells
 that are not 9:
 
 - Release 1 in *Constrained*: `null value in column "amount_cents" violates not-null constraint`. No Release 1
@@ -99,7 +99,7 @@ that are not 9:
 [`RolloutTests.cs`](tests/Payments.Tests/RolloutTests.cs) starts eight clients that record payments, adjust them and
 read totals without pause. Each keeps its own books in decimals. While they run, the test walks through the whole
 sequence, including the three phases in which two releases are deployed at once. At the end it requires zero failed
-operations, and that the database agrees with every client's books to the cent. In CI: @@ROLLOUTDETAIL@@.
+operations, and that the database agrees with every client's books to the cent. In CI: 5,579 operations, 0 failed, 592 rows backfilled while the clients were writing (the counts vary from run to run).
 
 ### What it found
 

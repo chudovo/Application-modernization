@@ -14,6 +14,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 | 04 | [.NET MAUI to React Native](cases/04-maui-to-react-native/) | .NET MAUI on .NET 10 | React Native 0.88, Expo SDK 58 | [EN](https://legacymodernizationhub.com/cases/net-maui-to-react-native/), [DE](https://legacy-modernisierung.de/fallbeispiele/net-maui-zu-react-native/) |
 | 05 | [Entity Framework 6 to EF Core](cases/05-ef6-to-ef-core/) | Entity Framework 6.5, SQL Server | EF Core 10, same database | [EN](https://legacymodernizationhub.com/cases/entity-framework-6-to-ef-core/), [DE](https://legacy-modernisierung.de/fallbeispiele/entity-framework-6-zu-ef-core/) |
 | 06 | [Strangler Fig: one service out of a monolith](cases/06-strangler-fig/) | ASP.NET Core monolith, one database | gateway (YARP), monolith, catalog service | [EN](https://legacymodernizationhub.com/cases/strangler-fig-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/strangler-fig-muster-beispiel/) |
+| 07 | [Zero-downtime schema change (expand and contract)](cases/07-zero-downtime-schema-change/) | PostgreSQL, money as floating point | integer cents, changed under load | [EN](https://legacymodernizationhub.com/cases/zero-downtime-schema-change-expand-contract/), [DE](https://legacy-modernisierung.de/fallbeispiele/schemaaenderung-ohne-downtime-expand-contract/) |
 
 ## License
 
