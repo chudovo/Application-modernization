@@ -1,0 +1,28 @@
+name: case-07 Zero-downtime schema change
+
+on:
+  push:
+    paths: ["cases/07-zero-downtime-schema-change/**", ".github/workflows/case-07-zero-downtime-schema-change.yml"]
+  pull_request:
+    paths: ["cases/07-zero-downtime-schema-change/**"]
+  workflow_dispatch:
+
+jobs:
+  migration:
+    name: Compatibility matrix, rollout under load and pitfalls on PostgreSQL 17
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: ci_only }   # a throwaway server that lives for one job, not a secret
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      PAYMENTS_PG: Host=localhost;Port=5432;Username=postgres;Password=ci_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test tests/Payments.Tests --nologo --logger "console;verbosity=detailed" | grep -E "MATRIX|ROLLOUT|Failed|Passed|Total tests|error" ; exit ${PIPESTATUS[0]}
+        working-directory: cases/07-zero-downtime-schema-change
