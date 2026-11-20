@@ -13,7 +13,7 @@ public class ContractTests : IDisposable
     private readonly Browser _browser = new();
     public void Dispose() => _browser.Dispose();
 
-    private static Dictionary<string, string> Registration(string name = "Jürgen Müller", string email = "j.mueller@example.de", string seats = "2", string budget = "1.500,00") =>
+    private static Dictionary<string, string> Registration(string name = "Jürgen Müller", string email = "j.mueller@example.de", string seats = "2", string budget = "1500,00") =>
         new() { ["Name"] = name, ["Email"] = email, ["Seats"] = seats, ["Budget"] = budget };
 
     private async Task<Page> RegisterAsync(Dictionary<string, string> values, int courseId = 2) =>
@@ -64,6 +64,16 @@ public class ContractTests : IDisposable
 
         Assert.Equal("SQL für Entwickler <Aufbaukurs>", page.Text("h1"));
         Assert.Contains("&lt;Aufbaukurs&gt;", page.Raw);
+    }
+
+    [Fact]
+    public async Task German_text_is_sent_as_text_not_as_numeric_entities()
+    {
+        var page = await _browser.GetAsync("/Courses/Details/2");
+
+        Assert.Equal("text/html; charset=utf-8", page.ContentType);
+        Assert.Contains("<h1>Größere Refactorings planen</h1>", page.Raw);
+        Assert.Contains("überprüfbaren", page.Raw);
     }
 
     [Fact]
@@ -133,7 +143,7 @@ public class ContractTests : IDisposable
     }
 
     [Theory]
-    [InlineData("1.500,00", "1.500,00 EUR")]   // the German way, with a thousands separator
+    [InlineData("1500,00", "1.500,00 EUR")]   // a decimal comma, the German way
     [InlineData("750,5", "750,50 EUR")]
     [InlineData("2000", "2.000,00 EUR")]
     public async Task Amounts_are_read_the_way_german_users_type_them(string typed, string shown)
@@ -142,6 +152,19 @@ public class ContractTests : IDisposable
 
         Assert.Equal(HttpStatusCode.Found, posted.Status);
         Assert.Equal(shown, (await _browser.GetAsync(posted.Location!)).Text("#budget"));
+    }
+
+    [Theory]
+    [InlineData("750.50")]     // a decimal point: on a German system this is not seven hundred and fifty
+    [InlineData("1.500,00")]   // a thousands separator
+    public async Task An_amount_the_application_cannot_read_is_refused_not_guessed(string typed)
+    {
+        var page = await RegisterAsync(Registration(budget: typed));
+
+        // The form comes back with one message and the text as it was typed. Nothing like 75050 is stored.
+        Assert.Equal(HttpStatusCode.OK, page.Status);
+        Assert.Equal([$"The value '{typed}' is not valid for Budget."], page.Texts("#registration .field-validation-error"));
+        Assert.Equal(typed, page.Attribute("#registration input[name=Budget]", "value"));
     }
 
     [Fact]
