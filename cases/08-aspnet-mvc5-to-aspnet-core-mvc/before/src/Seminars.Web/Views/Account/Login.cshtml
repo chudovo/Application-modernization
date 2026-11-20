@@ -1,0 +1,20 @@
+@model LoginForm
+@{ ViewBag.Title = "Anmelden"; }
+<h1>Anmelden</h1>
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "login" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ReturnUrl)
+    @Html.ValidationSummary(true)
+    <div>
+        @Html.LabelFor(m => m.UserName, "Benutzername")
+        @Html.TextBoxFor(m => m.UserName)
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Password, "Kennwort")
+        @Html.PasswordFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <button type="submit">Anmelden</button>
+}

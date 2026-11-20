@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Seminare</title>
+</head>
+<body>
+    <header>
+        <a href="@Url.Action("Index", "Home")">Seminare</a>
+        @Html.Action("Summary", "Registrations")
+        @if (User.Identity.IsAuthenticated)
+        {
+            using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logout" }))
+            {
+                @Html.AntiForgeryToken()
+                <span id="user">Angemeldet als @User.Identity.Name</span>
+                <button type="submit">Abmelden</button>
+            }
+        }
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+</body>
+</html>

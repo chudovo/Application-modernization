@@ -1,0 +1,13 @@
+@model IEnumerable<Course>
+@{ ViewBag.Title = "Kursübersicht"; }
+<h1>Kursübersicht</h1>
+<table id="courses">
+    @foreach (var course in Model)
+    {
+        <tr>
+            <td class="title">@Html.ActionLink(course.Title, "Details", "Courses", new { id = course.Id }, null)</td>
+            <td class="price">@course.Price.ToString("C")</td>
+            <td class="start">@course.Start.ToString("D")</td>
+        </tr>
+    }
+</table>

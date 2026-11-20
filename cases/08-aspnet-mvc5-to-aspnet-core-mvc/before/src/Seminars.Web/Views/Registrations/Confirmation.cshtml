@@ -1,0 +1,13 @@
+@model Registration
+@{ ViewBag.Title = "Bestätigung"; var course = (Course)ViewBag.Course; }
+<h1>Bestätigung</h1>
+@if (TempData["Notice"] != null)
+{
+    <p id="notice">@TempData["Notice"]</p>
+}
+<dl>
+    <dt>Kurs</dt><dd id="course">@course.Title</dd>
+    <dt>Name</dt><dd id="name">@Model.Name</dd>
+    <dt>Plätze</dt><dd id="seats">@Model.Seats</dd>
+    <dt>Budget</dt><dd id="budget">@Model.Budget.ToString("N2") EUR</dd>
+</dl>

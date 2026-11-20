@@ -1,0 +1,29 @@
+@model RegistrationForm
+@{ ViewBag.Title = "Anmeldung"; }
+<h1>Anmeldung: @Model.CourseTitle</h1>
+@using (Html.BeginForm("Create", "Registrations", FormMethod.Post, new { id = "registration" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CourseId)
+    <div>
+        @Html.LabelFor(m => m.Name, "Name")
+        @Html.TextBoxFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Email, "E-Mail")
+        @Html.TextBoxFor(m => m.Email)
+        @Html.ValidationMessageFor(m => m.Email)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Seats, "Plätze")
+        @Html.TextBoxFor(m => m.Seats)
+        @Html.ValidationMessageFor(m => m.Seats)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Budget, "Budget in EUR")
+        @Html.TextBoxFor(m => m.Budget)
+        @Html.ValidationMessageFor(m => m.Budget)
+    </div>
+    <button type="submit">Anmelden</button>
+}
