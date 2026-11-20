@@ -104,15 +104,15 @@ decimals the way the old application did. Whether to relax that is a product dec
 
 ## What translated without surprises
 
-These were ported mechanically and passed the contract on the first run:
+These were ported mechanically and needed no correction afterwards:
 
 - routing, including addresses in another letter case and with a trailing slash
 - model validation with data annotations, the messages and the `data-val-*` attributes for client-side validation
 - HTML encoding of data that contains markup
 - the redirect to the login page with `ReturnUrl`, and the refusal to redirect to another site after sign-in
 - `TempData` surviving exactly one redirect
-- anti-forgery protection (the old application answers a missing token with 500, the new one with 400; the contract
-  only requires a refusal)
+- anti-forgery protection (the contract requires that a post without the token is refused with an error status and
+  stores nothing, not a particular status code)
 - the child action in the layout, as a view component
 
 ## A note on the old application's project file
