@@ -50,8 +50,8 @@ The contract talks to `http://localhost:5080` unless `SEMINARS_URL` says otherwi
 
 | Check | Where | Result |
 |---|---|---|
-| Contract against ASP.NET MVC 5 | CI, Windows, IIS Express | @@BEFORE@@ |
-| Contract against ASP.NET Core MVC | CI, Linux, Kestrel | @@AFTER@@ |
+| Contract against ASP.NET MVC 5 | CI, Windows, IIS Express | 21 / 21 |
+| Contract against ASP.NET Core MVC | CI, Linux, Kestrel | 21 / 21 |
 
 Not verified:
 
