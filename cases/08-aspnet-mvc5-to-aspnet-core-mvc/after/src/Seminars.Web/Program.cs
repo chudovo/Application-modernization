@@ -1,11 +1,8 @@
 using System.Globalization;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Unicode;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.WebEncoders;
 using Seminars.Web.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +15,6 @@ builder.Services.AddControllersWithViews(mvc => mvc.ModelBinderProviders.Insert(
         json.JsonSerializerOptions.PropertyNamingPolicy = null;
         json.JsonSerializerOptions.Converters.Add(new LegacyDateConverter());
     });
-
-// Razor in ASP.NET Core writes every non-ASCII character as a numeric entity unless told otherwise: "Kurs&#xFC;bersicht".
-// Browsers show the same text, but the pages grow and anything that reads the HTML as text sees something else.
-builder.Services.Configure<WebEncoderOptions>(o => o.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 

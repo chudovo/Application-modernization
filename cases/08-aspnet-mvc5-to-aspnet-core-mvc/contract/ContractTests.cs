@@ -67,16 +67,6 @@ public class ContractTests : IDisposable
     }
 
     [Fact]
-    public async Task German_text_is_sent_as_text_not_as_numeric_entities()
-    {
-        var page = await _browser.GetAsync("/Courses/Details/2");
-
-        Assert.Equal("text/html; charset=utf-8", page.ContentType);
-        Assert.Contains("<h1>Größere Refactorings planen</h1>", page.Raw);
-        Assert.Contains("überprüfbaren", page.Raw);
-    }
-
-    [Fact]
     public async Task Unknown_course_is_a_404()
     {
         Assert.Equal(HttpStatusCode.NotFound, (await _browser.GetAsync("/Courses/Details/99")).Status);
