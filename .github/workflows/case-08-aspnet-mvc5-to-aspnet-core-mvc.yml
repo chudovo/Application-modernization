@@ -23,19 +23,18 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: dotnet build before/src/Seminars.Web --nologo
-      - name: Start the application under IIS Express
+      # One step: a process started in a step does not outlive it.
+      - name: Run the application under IIS Express and the contract against it
         run: |
           $site = (Resolve-Path before/src/Seminars.Web).Path
-          Start-Process "C:\Program Files\IIS Express\iisexpress.exe" -ArgumentList "/path:$site", "/port:5080", "/clr:v4.0" -RedirectStandardOutput iis.log -RedirectStandardError iis.err
+          $iis = Start-Process "C:\Program Files\IIS Express\iisexpress.exe" -ArgumentList "/path:$site", "/port:5080", "/clr:v4.0" -RedirectStandardOutput iis.log -RedirectStandardError iis.err -PassThru
           foreach ($i in 1..60) {
             try { $r = Invoke-WebRequest "$env:SEMINARS_URL/" -UseBasicParsing -TimeoutSec 30; if ($r.StatusCode -eq 200) { break } } catch { Start-Sleep -Seconds 2 }
           }
-          Invoke-WebRequest "$env:SEMINARS_URL/" -UseBasicParsing | Select-Object -ExpandProperty StatusCode
-      - name: What the old application sends
-        if: always()
-        run: |
           foreach ($p in "/", "/Courses/Details/3", "/Registrations/Create?courseId=2", "/Courses/Search?term=refactor") {
             "=== $p"; try { (Invoke-WebRequest "$env:SEMINARS_URL$p" -UseBasicParsing).Content } catch { $_.Exception.Message; $_.ErrorDetails.Message }
           }
-          Get-Content iis.log -Tail 20
-      - run: dotnet test contract --nologo
+          dotnet test contract --nologo
+          $result = $LASTEXITCODE
+          Stop-Process -Id $iis.Id -Force
+          exit $result

@@ -1,0 +1,14 @@
+@model List<Registration>
+@{ ViewBag.Title = "Anmeldungen"; }
+<h1>Anmeldungen</h1>
+<table id="registrations">
+    @foreach (var registration in Model)
+    {
+        <tr>
+            <td class="name">@registration.Name</td>
+            <td class="email">@registration.Email</td>
+            <td class="seats">@registration.Seats</td>
+            <td class="budget">@registration.Budget.ToString("N2")</td>
+        </tr>
+    }
+</table>

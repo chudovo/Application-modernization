@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Seminare</title>
+</head>
+<body>
+    <header>
+        <a asp-controller="Home" asp-action="Index">Seminare</a>
+        <vc:registration-summary />
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form id="logout" asp-controller="Account" asp-action="Logout" method="post">
+                <span id="user">Angemeldet als @User.Identity.Name</span>
+                <button type="submit">Abmelden</button>
+            </form>
+        }
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+</body>
+</html>

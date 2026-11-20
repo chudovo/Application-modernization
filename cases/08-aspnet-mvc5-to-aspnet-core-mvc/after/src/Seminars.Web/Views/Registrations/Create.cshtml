@@ -1,0 +1,27 @@
+@model RegistrationForm
+@{ ViewBag.Title = "Anmeldung"; }
+<h1>Anmeldung: @Model.CourseTitle</h1>
+<form id="registration" asp-action="Create" method="post">
+    <input type="hidden" asp-for="CourseId" />
+    <div>
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" type="text" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="Email">E-Mail</label>
+        <input asp-for="Email" type="text" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Seats">Plätze</label>
+        <input asp-for="Seats" type="text" />
+        <span asp-validation-for="Seats"></span>
+    </div>
+    <div>
+        <label asp-for="Budget">Budget in EUR</label>
+        <input asp-for="Budget" type="text" />
+        <span asp-validation-for="Budget"></span>
+    </div>
+    <button type="submit">Anmelden</button>
+</form>

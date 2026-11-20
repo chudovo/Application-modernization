@@ -1,0 +1,7 @@
+@model Course
+@{ ViewBag.Title = Model.Title; }
+<h1>@Model.Title</h1>
+<p id="description">@Model.Description</p>
+<p id="price">Preis: @Model.Price.ToString("N2") EUR</p>
+<p id="start">Beginn: @Model.Start.ToString("d")</p>
+<a id="register" asp-controller="Registrations" asp-action="Create" asp-route-courseId="@Model.Id">Jetzt anmelden</a>

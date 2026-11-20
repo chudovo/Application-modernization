@@ -1,0 +1,13 @@
+@model IEnumerable<Course>
+@{ ViewBag.Title = "Kursübersicht"; }
+<h1>Kursübersicht</h1>
+<table id="courses">
+    @foreach (var course in Model)
+    {
+        <tr>
+            <td class="title"><a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">@course.Title</a></td>
+            <td class="price">@course.Price.ToString("C")</td>
+            <td class="start">@course.Start.ToString("D")</td>
+        </tr>
+    }
+</table>
