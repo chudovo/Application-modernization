@@ -16,6 +16,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 | 06 | [Strangler Fig: one service out of a monolith](cases/06-strangler-fig/) | ASP.NET Core monolith, one database | gateway (YARP), monolith, catalog service | [EN](https://legacymodernizationhub.com/cases/strangler-fig-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/strangler-fig-muster-beispiel/) |
 | 07 | [Zero-downtime schema change (expand and contract)](cases/07-zero-downtime-schema-change/) | PostgreSQL, money as floating point | integer cents, changed under load | [EN](https://legacymodernizationhub.com/cases/zero-downtime-schema-change-expand-contract/), [DE](https://legacy-modernisierung.de/fallbeispiele/schemaaenderung-ohne-downtime-expand-contract/) |
 | 08 | [ASP.NET MVC 5 to ASP.NET Core MVC](cases/08-aspnet-mvc5-to-aspnet-core-mvc/) | ASP.NET MVC 5.3, .NET Framework 4.8, IIS | ASP.NET Core MVC, .NET 10, Kestrel | [EN](https://legacymodernizationhub.com/cases/aspnet-mvc-5-to-aspnet-core-mvc/), [DE](https://legacy-modernisierung.de/fallbeispiele/aspnet-mvc-5-zu-aspnet-core-mvc/) |
+| 09 | [Containerizing a Windows-hosted service](cases/09-containerize-a-windows-hosted-service/) | a service on one Windows server | a Linux container: non-root, read-only, replaceable | [EN](https://legacymodernizationhub.com/cases/containerizing-a-legacy-net-service/), [DE](https://legacy-modernisierung.de/fallbeispiele/legacy-net-dienst-containerisieren/) |
 
 ## License
 

@@ -51,9 +51,9 @@ tests start their own containers from `inbox:after` (`INBOX_IMAGE`).
 
 | Check | Where | Result |
 |---|---|---|
-| 10 scenarios against the old service as a process | CI, Windows | @@BEFORE@@ |
-| 10 scenarios against the container | CI, Linux, Docker | @@AFTER_S@@ |
-| 9 container tests against the image | CI, Linux, Docker | @@AFTER_C@@ |
+| 10 scenarios against the old service as a process | CI, Windows | 10 / 10 |
+| 10 scenarios against the container | CI, Linux, Docker | 10 / 10 |
+| 9 container tests against the image | CI, Linux, Docker | 9 / 9 |
 | The same 19 tests against the first attempt | CI, Linux, Docker | fail as described below |
 
 Not verified:
@@ -126,11 +126,13 @@ All in [`after/src/Inbox/Program.cs`](after/src/Inbox/Program.cs) and [`after/Do
 - **Health.** `/healthz/live` says the process answers. `/healthz/ready` says it can do its job, which here means
   the volume is writable. With the volume mounted read-only the service is live and not ready.
 
-In CI: @@STOP@@
+In CI: with an upload in progress, `docker stop` returned after 3.1 s for the new image, the upload answered 201 and the
+document was there afterwards. For the first attempt it returned after 20.2 s, the whole grace period.
 
 ## Two things the numbers do not flatter
 
-- **The image got bigger, not smaller.** @@SIZES@@ The culture and time zone data that alpine leaves out are the
+- **The image got bigger, not smaller.** As `docker images` reports them in CI: first attempt on alpine 179 MB, final image 239 MB,
+first attempt on the default image 365 MB. The culture and time zone data that alpine leaves out are the
   difference. A small image that cannot format a date is not a saving.
 - **The first attempt looked fine.** It built, and on the default image it answered most requests. Everything that
   was wrong with it shows only when the container is restricted, stopped, replaced or doubled, which is to say in
