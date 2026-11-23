@@ -1,0 +1,83 @@
+name: case-09 Containerizing a Windows-hosted service
+
+on:
+  push:
+    paths: ["cases/09-containerize-a-windows-hosted-service/**", ".github/workflows/case-09-containerize-a-windows-hosted-service.yml"]
+  pull_request:
+    paths: ["cases/09-containerize-a-windows-hosted-service/**"]
+  workflow_dispatch:
+
+env:
+  INBOX_URL: http://localhost:5090
+
+jobs:
+  scenarios-before:
+    name: Scenarios against the service as a process on Windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: cases/09-containerize-a-windows-hosted-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet build before/src/Inbox --nologo
+      # One step: a process started in a step does not outlive it.
+      - name: Run the service and the scenarios against it
+        run: |
+          $env:Clock__FixedUtc = "2026-07-01T22:30:00Z"
+          $service = Start-Process dotnet -ArgumentList "run", "--project", "before/src/Inbox", "--no-build", "--no-launch-profile", "--urls", $env:INBOX_URL -PassThru -RedirectStandardOutput service.log -RedirectStandardError service.err
+          foreach ($i in 1..60) { try { Invoke-WebRequest "$env:INBOX_URL/" -UseBasicParsing -TimeoutSec 5 | Out-Null; break } catch { if ($_.Exception.Response) { break }; Start-Sleep -Seconds 1 } }
+          dotnet test tests/Inbox.Tests --nologo --filter Kind=Scenario
+          $result = $LASTEXITCODE
+          Stop-Process -Id $service.Id -Force
+          exit $result
+
+  container-after:
+    name: Scenarios and container tests against the image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cases/09-containerize-a-windows-hosted-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: docker build -f after/Dockerfile -t inbox:after .
+      - name: Run the container under restrictions and all tests against it
+        run: |
+          docker run -d --name inbox --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges \
+            -e ApiKey=demo-key -e Clock__FixedUtc=2026-07-01T22:30:00Z -p 127.0.0.1:5090:8080 inbox:after
+          for i in $(seq 1 30); do curl -s -o /dev/null "$INBOX_URL/healthz/ready" && break; sleep 1; done
+          INBOX_IMAGE=inbox:after dotnet test tests/Inbox.Tests --nologo --logger "console;verbosity=detailed" | grep -E "IMAGE|STOP|Failed|Passed|Total tests|error" ; exit ${PIPESTATUS[0]}
+
+  first-attempt:
+    name: The same tests against the first attempt (expected to fail, for the record)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cases/09-containerize-a-windows-hosted-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: |
+          docker build -f attempt/Dockerfile -t inbox:attempt .
+          docker build -f attempt/Dockerfile --build-arg BASE=10.0 -t inbox:attempt-default .
+      - name: Smallest image, application as it is
+        run: |
+          docker run --name a1 -e ApiKey=demo-key inbox:attempt 2>&1 | grep -m1 "Unhandled exception" || true
+      - name: Default image, application as it is
+        run: |
+          docker run -d --name inbox -e ApiKey=demo-key -e Clock__FixedUtc=2026-07-01T22:30:00Z -p 127.0.0.1:5090:8080 inbox:attempt-default
+          sleep 5
+          echo "--- scenarios"
+          dotnet test tests/Inbox.Tests --nologo --filter Kind=Scenario | grep -E "Passed!|Failed!" || true
+          echo "--- container tests, with the restrictions"
+          INBOX_IMAGE=inbox:attempt-default dotnet test tests/Inbox.Tests --nologo --filter Kind=Container | grep -E "Passed!|Failed!" || true
+          echo "--- container tests, without the restrictions"
+          INBOX_RESTRICTIONS=off INBOX_IMAGE=inbox:attempt-default dotnet test tests/Inbox.Tests --nologo --filter Kind=Container --logger "console;verbosity=detailed" | grep -E "STOP|Total tests|Passed:|Failed:" || true

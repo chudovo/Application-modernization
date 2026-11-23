@@ -1,0 +1,5 @@
+Tagesbericht {date}
+Postfach: {box}
+Dokumente: {count}
+Gesamtgröße: {size}
+Letzter Eingang: {last}
