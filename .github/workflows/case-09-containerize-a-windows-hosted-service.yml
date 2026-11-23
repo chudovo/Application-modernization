@@ -68,6 +68,8 @@ jobs:
       - run: |
           docker build -f attempt/Dockerfile -t inbox:attempt .
           docker build -f attempt/Dockerfile --build-arg BASE=10.0 -t inbox:attempt-default .
+          docker build -f after/Dockerfile -t inbox:after .
+          docker images --format 'SIZE {{.Repository}}:{{.Tag}} {{.Size}}' | grep inbox
       - name: Smallest image, application as it is
         run: |
           docker run --name a1 -e ApiKey=demo-key inbox:attempt 2>&1 | grep -m1 "Unhandled exception" || true
