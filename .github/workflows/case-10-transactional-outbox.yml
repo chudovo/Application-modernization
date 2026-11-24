@@ -1,0 +1,33 @@
+name: case-10 Transactional outbox
+
+on:
+  push:
+    paths: ["cases/10-transactional-outbox/**", ".github/workflows/case-10-transactional-outbox.yml"]
+  pull_request:
+    paths: ["cases/10-transactional-outbox/**"]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Scenarios and failure tests with PostgreSQL 17 and RabbitMQ 4
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: ci_only }   # throwaway servers that live for one job, not secrets
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 20
+      rabbitmq:
+        image: rabbitmq:4
+        ports: ["5672:5672"]
+        options: --health-cmd "rabbitmq-diagnostics -q ping" --health-interval 5s --health-timeout 10s --health-retries 20
+    env:
+      SHOP_PG: Host=localhost;Port=5432;Username=postgres;Password=ci_only
+      SHOP_AMQP: amqp://guest:guest@localhost:5672
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test tests/Shop.Tests --nologo --logger "console;verbosity=detailed" | grep -E "OUTBOX|RELAYS|FAILURES|Failed|Passed|Total tests|error" ; exit ${PIPESTATUS[0]}
+        working-directory: cases/10-transactional-outbox
