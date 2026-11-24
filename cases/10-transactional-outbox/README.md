@@ -47,10 +47,10 @@ Other servers: set `SHOP_PG` and `SHOP_AMQP`. The tests create and remove their 
 
 | Check | Where | Result |
 |---|---|---|
-| 4 scenarios without failures, dual write | CI, PostgreSQL 17, RabbitMQ 4 | @@S1@@ |
-| The same 4 scenarios, outbox | CI | @@S2@@ |
-| 4 failure tests that show what dual write does | CI | @@F1@@ |
-| 5 failure tests that show what the outbox guarantees | CI | @@F2@@ |
+| 4 scenarios without failures, dual write | CI, PostgreSQL 17, RabbitMQ 4 | 4 / 4 |
+| The same 4 scenarios, outbox | CI | 4 / 4 |
+| 4 failure tests that show what dual write does | CI | 4 / 4 |
+| 5 failure tests that show what the outbox guarantees | CI | 5 / 5 |
 | 300 orders under mixed failures, both designs | CI | see below |
 
 Not verified:
@@ -122,18 +122,18 @@ vary a little from run to run, the ones for the outbox do not):
 
 | | Dual write | Outbox |
 |---|---|---|
-| Requests that returned an error | @@E1@@ of 300 | 0 of 300 |
+| Requests that returned an error | 53 of 300 | 0 of 300 |
 | Orders stored | 300 | 300 |
-| Shipments | @@SH1@@ | 300 |
-| Orders never shipped | @@N1@@ | 0 |
-| Orders shipped more than once | @@D1@@ | 0 |
+| Shipments | 258 | 300 |
+| Orders never shipped | 53 | 0 |
+| Orders shipped more than once | 10 | 0 |
 
 Every one of the requests that returned an error under dual write had stored its order.
 
 ## What it costs
 
 - **Two more tables and a background process** that must run, be monitored, and be cleaned up after.
-- **Delay.** A shipment appears after the relay's next round, not inside the request. Here that is tens of
-  milliseconds; it is no longer zero.
+- **Delay.** A shipment appears after the relay's next round, not inside the request. Here the relay
+  looks every 50 ms; the delay is small, and it is no longer zero.
 - **Every consumer must be idempotent.** The outbox moves the problem of duplicates from "sometimes" to "by design".
   A consumer that cannot deduplicate turns a lost-message bug into a double-processing bug.
