@@ -81,7 +81,7 @@ translated: `+` to `||`, `OUTPUT INSERTED.id` to `RETURNING id`, `ISNULL` to `CO
 | Mechanical translation, identity sequences reset after the copy | 5 of 14 |
 | Finished version | 14 of 14 |
 
-Only two of the failures are errors. The rest are wrong answers.
+With the sequences reset, one of the nine failures is an error message. The other eight are wrong answers.
 
 ## What SQL Server did without being asked
 
