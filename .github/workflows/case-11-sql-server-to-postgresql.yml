@@ -1,0 +1,36 @@
+name: case-11 SQL Server to PostgreSQL
+
+on:
+  push:
+    paths: ["cases/11-sql-server-to-postgresql/**", ".github/workflows/case-11-sql-server-to-postgresql.yml"]
+  pull_request:
+    paths: ["cases/11-sql-server-to-postgresql/**"]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Behaviour checks on SQL Server 2022 and PostgreSQL 17, data copy
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: Ci_only_Passw0rd }   # throwaway servers that live for one job, not secrets
+        ports: ["1433:1433"]
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Ci_only_Passw0rd -Q 'SELECT 1'"
+          --health-interval 5s --health-timeout 5s --health-retries 30
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: ci_only }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      CRM_SQLSERVER: Server=localhost,1433;User Id=sa;Password=Ci_only_Passw0rd;TrustServerCertificate=True
+      CRM_PG: Host=localhost;Port=5432;Username=postgres;Password=ci_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test tests/Crm.Tests --nologo --logger "console;verbosity=detailed" | grep -E "ENGINE|Failed|Passed|Total tests|error" ; exit ${PIPESTATUS[0]}
+        working-directory: cases/11-sql-server-to-postgresql
