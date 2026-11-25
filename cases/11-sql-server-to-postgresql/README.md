@@ -52,10 +52,10 @@ Other servers: set `CRM_SQLSERVER` and `CRM_PG`. The tests create and drop their
 
 | Check | Where | Result |
 |---|---|---|
-| 14 behaviour checks on SQL Server | CI, SQL Server 2022 | @@SS@@ |
-| The same 14 on PostgreSQL, data copied from SQL Server | CI, PostgreSQL 17 | @@PG@@ |
-| The same 14 on the mechanical translation | CI | @@MECH@@ |
-| Data copy: row counts and checksums per table; pitfalls | CI | @@MIG@@ |
+| 14 behaviour checks on SQL Server | CI, SQL Server 2022 | 14 / 14 |
+| The same 14 on PostgreSQL, data copied from SQL Server | CI, PostgreSQL 17 | 14 / 14 |
+| The same 14 on the mechanical translation | CI | 4 / 14, and 5 / 14 with identity sequences reset |
+| Data copy: row counts and checksums per table; pitfalls | CI | 5 / 5 |
 
 Not verified:
 

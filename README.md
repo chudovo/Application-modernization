@@ -18,6 +18,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 | 08 | [ASP.NET MVC 5 to ASP.NET Core MVC](cases/08-aspnet-mvc5-to-aspnet-core-mvc/) | ASP.NET MVC 5.3, .NET Framework 4.8, IIS | ASP.NET Core MVC, .NET 10, Kestrel | [EN](https://legacymodernizationhub.com/cases/aspnet-mvc-5-to-aspnet-core-mvc/), [DE](https://legacy-modernisierung.de/fallbeispiele/aspnet-mvc-5-zu-aspnet-core-mvc/) |
 | 09 | [Containerizing a Windows-hosted service](cases/09-containerize-a-windows-hosted-service/) | a service on one Windows server | a Linux container: non-root, read-only, replaceable | [EN](https://legacymodernizationhub.com/cases/containerizing-a-legacy-net-service/), [DE](https://legacy-modernisierung.de/fallbeispiele/legacy-net-dienst-containerisieren/) |
 | 10 | [Transactional outbox](cases/10-transactional-outbox/) | save to the database, then publish to the broker | outbox table, relay, idempotent consumer (PostgreSQL, RabbitMQ) | [EN](https://legacymodernizationhub.com/cases/transactional-outbox-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/transactional-outbox-muster-beispiel/) |
+| 11 | [SQL Server to PostgreSQL](cases/11-sql-server-to-postgresql/) | data access code and data on SQL Server 2022 | the same on PostgreSQL 17, data copied and verified | [EN](https://legacymodernizationhub.com/cases/sql-server-to-postgresql-migration/), [DE](https://legacy-modernisierung.de/fallbeispiele/sql-server-zu-postgresql-migration/) |
 
 ## License
 
