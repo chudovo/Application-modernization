@@ -48,8 +48,8 @@ cd e2e && npm ci && npx playwright install chromium && npx playwright test
 
 | Check | Where | Result |
 |---|---|---|
-| 12 browser tests against the AngularJS application | CI, Chromium | @@BEFORE@@ |
-| The same 12 against the Angular application | CI, Chromium | @@AFTER@@ |
+| 12 browser tests against the AngularJS application | CI, Chromium | 12 / 12 |
+| The same 12 against the Angular application | CI, Chromium | 12 / 12 |
 
 Not verified:
 
