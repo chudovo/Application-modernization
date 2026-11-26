@@ -1,0 +1,30 @@
+<p><a data-test="back" href="#!/orders">Back to the list</a></p>
+
+<p data-test="not-found" class="error" ng-if="vm.notFound">Order not found</p>
+
+<form name="form" novalidate ng-if="vm.order" ng-submit="vm.save()">
+  <h2 data-test="title">Order {{vm.order.id}}: {{vm.order.customer}}</h2>
+  <p data-test="summary">{{vm.order.total | currency}}, placed {{vm.order.placed | date: 'medium' : 'UTC'}}</p>
+  <p data-test="note" ng-bind-html="vm.order.note"></p>
+
+  <p>
+    <label>Status
+      <select data-test="status" name="status" ng-model="vm.order.status">
+        <option value="new">New</option>
+        <option value="shipped">Shipped</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </label>
+  </p>
+  <p>
+    <label>Discount in percent
+      <input data-test="discount" name="discount" type="number" ng-model="vm.order.discount" required min="0" max="50">
+    </label>
+    <span data-test="discount-error" class="error" ng-if="form.discount.$error.required">Discount is required</span>
+    <span data-test="discount-error" class="error" ng-if="form.discount.$error.min || form.discount.$error.max">Discount must be between 0 and 50</span>
+  </p>
+  <p>
+    <button data-test="save" type="submit" ng-disabled="form.$invalid">Save</button>
+    <span data-test="saved" ng-if="vm.saved">Saved</span>
+  </p>
+</form>

@@ -1,0 +1,10 @@
+{
+  "name": "orders-angularjs",
+  "private": true,
+  "description": "The AngularJS 1.8 application. No build step: the browser loads these files as they are.",
+  "dependencies": {
+    "angular": "1.8.3",
+    "angular-route": "1.8.3",
+    "angular-sanitize": "1.8.3"
+  }
+}

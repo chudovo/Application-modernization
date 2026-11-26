@@ -1,0 +1,30 @@
+name: case-12 AngularJS to Angular
+
+on:
+  push:
+    paths: ["cases/12-angularjs-to-angular/**", ".github/workflows/case-12-angularjs-to-angular.yml"]
+  pull_request:
+    paths: ["cases/12-angularjs-to-angular/**"]
+  workflow_dispatch:
+
+jobs:
+  browser-tests:
+    name: The same browser tests against AngularJS 1.8 and Angular 22
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cases/12-angularjs-to-angular
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: AngularJS application (no build step)
+        run: npm ci
+        working-directory: cases/12-angularjs-to-angular/before
+      - name: Angular application
+        run: npm ci && npx ng build
+        working-directory: cases/12-angularjs-to-angular/after
+      - name: Browser tests
+        run: npm ci && npx playwright install --with-deps chromium && npx playwright test --trace off
+        working-directory: cases/12-angularjs-to-angular/e2e

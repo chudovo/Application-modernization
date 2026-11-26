@@ -1,0 +1,34 @@
+<p>
+  <input data-test="search" type="search" placeholder="Search" ng-model="vm.search">
+  <select data-test="status" ng-model="vm.status" ng-change="vm.load()">
+    <option value="">All</option>
+    <option value="new">New</option>
+    <option value="shipped">Shipped</option>
+    <option value="cancelled">Cancelled</option>
+  </select>
+</p>
+
+<p data-test="count">
+  <ng-pluralize count="visible.length" when="{'0': 'No orders', 'one': '1 order', 'other': '{} orders'}"></ng-pluralize>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th data-test="sort-customer" ng-click="vm.sortBy('customer')">Customer</th>
+      <th data-test="sort-city" ng-click="vm.sortBy('city')">City</th>
+      <th data-test="sort-total" ng-click="vm.sortBy('total')">Total</th>
+      <th data-test="sort-placed" ng-click="vm.sortBy('placed')">Placed</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-test="row" ng-repeat="order in visible = (vm.orders | filter: vm.search | orderBy: vm.sort : vm.reverse)">
+      <td data-test="customer"><a ng-href="#!/orders/{{order.id}}">{{order.customer}}</a></td>
+      <td data-test="city">{{order.city}}</td>
+      <td data-test="total">{{order.total | currency}}</td>
+      <td data-test="placed">{{order.placed | date: 'mediumDate' : 'UTC'}}</td>
+      <td data-test="status-cell">{{order.status}}</td>
+    </tr>
+  </tbody>
+</table>
