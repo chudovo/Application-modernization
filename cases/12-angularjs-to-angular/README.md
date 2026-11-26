@@ -74,7 +74,8 @@ columns, same form. Against the tests:
 
 **Old addresses.** AngularJS addresses look like `/#!/orders/3`. They are in bookmarks, e-mails and wiki pages.
 The Angular router uses `/orders/3` and treats everything after `#` as a fragment, so an old address opens the list.
-No error, just the wrong page. Five tests failed for this one reason. One line in
+No error, just the wrong page. Five of the twelve tests open an order through such an address, and all five failed.
+One line in
 [`main.ts`](after/src/main.ts) rewrites the address before the application starts.
 
 The other failures all come from things AngularJS did inside its templates:
