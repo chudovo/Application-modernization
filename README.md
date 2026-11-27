@@ -20,6 +20,7 @@ and are maintained by [Chudovo](https://chudovo.com/).
 | 10 | [Transactional outbox](cases/10-transactional-outbox/) | save to the database, then publish to the broker | outbox table, relay, idempotent consumer (PostgreSQL, RabbitMQ) | [EN](https://legacymodernizationhub.com/cases/transactional-outbox-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/transactional-outbox-muster-beispiel/) |
 | 11 | [SQL Server to PostgreSQL](cases/11-sql-server-to-postgresql/) | data access code and data on SQL Server 2022 | the same on PostgreSQL 17, data copied and verified | [EN](https://legacymodernizationhub.com/cases/sql-server-to-postgresql-migration/), [DE](https://legacy-modernisierung.de/fallbeispiele/sql-server-zu-postgresql-migration/) |
 | 12 | [AngularJS to Angular](cases/12-angularjs-to-angular/) | AngularJS 1.8.3 | Angular 22, standalone components and signals | [EN](https://legacymodernizationhub.com/cases/angularjs-to-angular-migration/), [DE](https://legacy-modernisierung.de/fallbeispiele/angularjs-zu-angular-migration/) |
+| 13 | [Saga instead of a database transaction](cases/13-saga-instead-of-distributed-transaction/) | one transaction in a monolith | three services, a saga with compensations (PostgreSQL) | [EN](https://legacymodernizationhub.com/cases/saga-pattern-example/), [DE](https://legacy-modernisierung.de/fallbeispiele/saga-muster-beispiel/) |
 
 ## License
 

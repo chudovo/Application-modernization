@@ -47,9 +47,9 @@ Another server: set `SHOP_PG`. The tests create and drop their own databases.
 
 | Check | Where | Result |
 |---|---|---|
-| 5 scenarios without failures, for each of the three designs | CI, PostgreSQL 17 | @@SCEN@@ |
-| 4 tests that describe what the first attempt does when something fails | CI | @@ATT@@ |
-| 6 tests of what the saga does when something fails | CI | @@SAGA@@ |
+| 5 scenarios without failures, for each of the three designs | CI, PostgreSQL 17 | 15 / 15 |
+| 4 tests that describe what the first attempt does when something fails | CI | 4 / 4 |
+| 6 tests of what the saga does when something fails | CI | 6 / 6 |
 | 300 orders under mixed failures, all three designs | CI | see below |
 
 Not verified:
@@ -131,19 +131,19 @@ From CI (the run is seeded, so the numbers are the same every time):
 
 | | Monolith | First attempt | Saga |
 |---|---|---|---|
-| Requests that ended in an error | @@E_M@@ | @@E_A@@ | @@E_S@@ |
-| Confirmed / rejected | @@CR_M@@ | @@CR_A@@ | @@CR_S@@ |
-| Orders left unfinished | 0 | @@U_A@@ | 0 |
-| Units missing from stock | 0 | @@M_A@@ | 0 |
-| Paid but not confirmed | 0 | @@P_A@@ | 0 |
-| Charged twice | 0 | @@D_A@@ | 0 |
+| Requests that ended in an error | 11 of 300 | 19 of 300 | 11 of 300 |
+| Confirmed / rejected | 259 / 30 | 230 / 51 | 271 / 29 |
+| Orders left unfinished | 0 | 19 | 0 |
+| Units missing from stock | 0 | 35 | 0 |
+| Paid but not confirmed | 0 | 7 | 0 |
+| Charged twice | 0 | 3 | 0 |
 
 The monolith loses the orders during which the process died: they are rolled back, and the customer tries again.
 The saga finishes them, which is why it confirms more.
 
 ## What it costs
 
-- **More code and a table**, for something a database did for free. The saga here is about 150 lines for three steps.
+- **More code and a table**, for something a database did for free. The saga here is about 160 lines for three steps.
 - **Every operation of every participant has to be repeatable.** This is the larger part of the work, and it is in
   the other services, not in the saga.
 - **A third answer.** "Pending" has to be handled by every caller and shown to every user.
