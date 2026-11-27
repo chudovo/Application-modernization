@@ -1,0 +1,28 @@
+name: case-13 Saga instead of a distributed transaction
+
+on:
+  push:
+    paths: ["cases/13-saga-instead-of-distributed-transaction/**", ".github/workflows/case-13-saga-instead-of-distributed-transaction.yml"]
+  pull_request:
+    paths: ["cases/13-saga-instead-of-distributed-transaction/**"]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Scenarios and failure tests for the monolith, the first attempt and the saga
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: ci_only }   # a throwaway server that lives for one job, not a secret
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      SHOP_PG: Host=localhost;Port=5432;Username=postgres;Password=ci_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test tests/Shop.Tests --nologo --logger "console;verbosity=detailed" | grep -E "FAILURES|Failed|Passed|Total tests|error" ; exit ${PIPESTATUS[0]}
+        working-directory: cases/13-saga-instead-of-distributed-transaction
